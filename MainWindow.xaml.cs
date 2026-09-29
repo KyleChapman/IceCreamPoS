@@ -13,12 +13,16 @@ namespace IceCream
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        #region Variable Declarations
         int miniCount = 0;
         int oneScoopCount = 0;
         int twoScoopCount = 0;
         int threeScoopCount = 0;
         int waffleCount = 0;
+        #endregion
 
+        #region Constructor(s)
         /// <summary>
         /// Constructor for the form.
         /// </summary>
@@ -26,7 +30,9 @@ namespace IceCream
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region Event Handlers
         /// <summary>
         /// Increment counters and determine the bill based on which products are selected to order.
         /// </summary>
@@ -97,5 +103,6 @@ namespace IceCream
             threeScoopCount = 0;
             waffleCount = 0;
         }
+        #endregion
     }
 }
