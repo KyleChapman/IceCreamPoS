@@ -1,6 +1,6 @@
 ﻿// Author:  Kyle Chapman
 // Created: September 17, 2026
-// Updated: September 18, 2026
+// Updated: October 1, 2026
 // Description: Outputs a bill for ice cream cones based
 // on what someone selects as the ice cream order.
 
@@ -20,6 +20,13 @@ namespace IceCream
         int twoScoopCount = 0;
         int threeScoopCount = 0;
         int waffleCount = 0;
+        const double MINI_CONE_COST = 2.99;
+        const double ONE_SCOOP_COST = 3.99;
+        const double TWO_SCOOP_COST = 4.99;
+        const double THREE_SCOOP_COST = 5.99;
+        const double WAFFLE_CONE_COST = 1.00;
+        const double HST = 0.13;
+
         #endregion
 
         #region Constructor(s)
@@ -29,6 +36,7 @@ namespace IceCream
         public MainWindow()
         {
             InitializeComponent();
+            ResetForm();
         }
         #endregion
 
@@ -39,12 +47,6 @@ namespace IceCream
         private void AddToOrder(object sender, RoutedEventArgs e)
         {
             // Declaration.
-            const double MINI_CONE_COST = 2.99;
-            const double ONE_SCOOP_COST = 3.99;
-            const double TWO_SCOOP_COST = 4.99;
-            const double THREE_SCOOP_COST = 5.99;
-            const double WAFFLE_CONE_COST = 1.00;
-            const double HST = 0.13;
             double subtotal;
             double tax;
             double totalCost;
@@ -83,6 +85,8 @@ namespace IceCream
             textTax.Text = tax.ToString("c");
             textTotal.Text = totalCost.ToString("c");
 
+            // Populate the receipt window.
+            textReceipt.Text = GenerateReceipt();
         }
 
         /// <summary>
@@ -90,11 +94,23 @@ namespace IceCream
         /// </summary>
         private void ResetClick(object sender, RoutedEventArgs e)
         {
+            ResetForm();
+        }
+        #endregion
+
+        #region Helper Functions
+        /// <summary>
+        /// Resets the form to its default state, including counters used for orders.
+        /// </summary>
+        private void ResetForm()
+        {
+            // Reset the input and output fields.
             radioMini.IsChecked = true;
             checkWaffle.IsChecked = false;
             textSubtotal.Clear();
             textTax.Clear();
             textTotal.Clear();
+            textReceipt.Clear();
 
             // Reset the counters.
             miniCount = 0;
@@ -102,6 +118,49 @@ namespace IceCream
             twoScoopCount = 0;
             threeScoopCount = 0;
             waffleCount = 0;
+
+            // Set focus.
+            radioMini.Focus();
+        }
+
+        /// <summary>
+        /// Generate full receipt text showing quantities ordered and totals.
+        /// </summary>
+        /// <returns>Multi-line text showing all purchases and total value.</returns>
+        private string GenerateReceipt()
+        {
+            string fullReceipt = "";
+
+            // For each item ordered, add the quantity and value of that item to a big string.
+            if (miniCount > 0)
+            {
+                fullReceipt += miniCount.ToString() + " mini scoops @ " + (miniCount*MINI_CONE_COST).ToString("c") + Environment.NewLine;
+            }
+            if (oneScoopCount > 0)
+            {
+                fullReceipt += oneScoopCount.ToString() + " one scoop cones @ " + (oneScoopCount*ONE_SCOOP_COST).ToString("c") + Environment.NewLine;
+            }
+            if (twoScoopCount > 0)
+            {
+                fullReceipt += twoScoopCount.ToString() + " two scoop cones @ " + (twoScoopCount*TWO_SCOOP_COST).ToString("c") + Environment.NewLine;
+            }
+            if (threeScoopCount > 0)
+            {
+                fullReceipt += threeScoopCount.ToString() + " three scoop cones @ " + (threeScoopCount*THREE_SCOOP_COST).ToString("c") + Environment.NewLine;
+            }
+
+            if (waffleCount > 0)
+            {
+                fullReceipt += waffleCount.ToString() + " add waffle cone @ " + (waffleCount * WAFFLE_CONE_COST).ToString("c") + Environment.NewLine;
+            }
+
+            // Add the subtotal, tax and total from existing form elements to the big string.
+            fullReceipt += 
+                Environment.NewLine + "Subtotal: " + textSubtotal.Text +
+                Environment.NewLine + "Tax: " + textTax.Text +
+                Environment.NewLine + "Total: " + textTotal.Text;
+
+            return fullReceipt;
         }
         #endregion
     }
